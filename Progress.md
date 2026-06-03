@@ -19,3 +19,14 @@
 - Understanding different communication types used by PCBs 
 - Utilizing a new platform (easyEDA) to create schematics 
 
+
+## Day 2 - Calculating BPM 
+### What I Did
+- wired the MAX30102 to the arduino 
+- conducted an I2C scan to ensure the MAX30102 was detected 
+- retrieved IR data 
+- calculated BPM based on IR data 
+
+### Challenges
+- understanding how to download libraries
+- creating functions in Arduino IDE
