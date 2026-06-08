@@ -30,3 +30,13 @@
 ### Challenges
 - understanding how to download libraries
 - creating functions in Arduino IDE
+
+
+## Day 3 - Calculating SPO2 
+### What I Did
+- researched how SPO2 is calculated in pulse oximeters
+- created a custom function to implement these calculations
+
+### Challenges
+- understanding the spo2 calculations 
+- translating these calculations into code that is updating in real time 
