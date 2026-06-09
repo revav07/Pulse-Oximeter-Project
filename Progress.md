@@ -34,9 +34,17 @@
 
 ## Day 3 - Calculating SPO2 
 ### What I Did
-- researched how SPO2 is calculated in pulse oximeters
-- created a custom function to implement these calculations
-
+- researched how SpO₂ is calculated in pulse oximeters.
+- developed a custom function to implement SpO₂ estimation using IR and red light sensor data.
 ### Challenges
-- understanding the spo2 calculations 
-- translating these calculations into code that is updating in real time 
+- understanding the underlying SpO₂ calculation method and signal processing involved.
+- translating the mathematical process into code that updates in real time using continuously incoming sensor data.
+
+## Day 4 - Smoothing out BPM Calculations
+### What I Did
+- BPM was previously calculated using a single heartbeat interval, which caused fluctuations.
+- implemented a moving average of multiple heartbeat intervals to make readings more reliable.
+- reused the rolling average approach previously used in SpO₂ processing.
+### Challenges
+- adapting the averaging system from SpO₂ (signal data) to BPM (time interval data).
+- ensuring the system remains responsive while still reducing noise in the readings.
