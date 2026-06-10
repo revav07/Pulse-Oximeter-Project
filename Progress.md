@@ -12,7 +12,7 @@
 ## Day 1 - Research and Wiring 
 ### What I Did 
 - Researched I2C communication (SDA and SCL wiring)
-- Conducted background research on how MAX30102 module works (see the Guide I created in Docs)
+- Conducted background research on how MAX30102 module works 
 - Created schematics diagram 
 
 ### Challenges
@@ -36,6 +36,7 @@
 ### What I Did
 - researched how SpO₂ is calculated in pulse oximeters.
 - developed a custom function to implement SpO₂ estimation using IR and red light sensor data.
+
 ### Challenges
 - understanding the underlying SpO₂ calculation method and signal processing involved.
 - translating the mathematical process into code that updates in real time using continuously incoming sensor data.
@@ -45,6 +46,16 @@
 - BPM was previously calculated using a single heartbeat interval, which caused fluctuations.
 - implemented a moving average of multiple heartbeat intervals to make readings more reliable.
 - reused the rolling average approach previously used in SpO₂ processing.
+
 ### Challenges
 - adapting the averaging system from SpO₂ (signal data) to BPM (time interval data).
 - ensuring the system remains responsive while still reducing noise in the readings.
+
+## Day 5 - Printout Timer and LCD Display 
+### What I Did
+- implemented a timed update system to display the most recent BPM and SpO₂ readings at 1-second intervals
+- assembled and wired an LCD display for real-time data output
+
+### Challenges
+- balanced real-time data processing with display updates to prevent flickering and maintain readable output
+- resolved incorrect LCD row formatting issues due to wiring configuration and cursor positioning errors

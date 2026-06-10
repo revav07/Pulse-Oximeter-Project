@@ -3,6 +3,10 @@
 #include "MAX30105.h"
 #include "heartRate.h"
 #include "spo2_algorithm.h"
+#include <LiquidCrystal.h> 
+
+//initialize lcd 
+LiquidCrystal lcd(2, 3, 8, 9, 10, 11);
 
 //initialize sensor
 MAX30105 sensor;
@@ -11,11 +15,11 @@ bool sensor_found = false;
 //initialize variables for bpm system 
 bool first_beat = true; 
 
-long current_time; 
-long previous_time; 
-long elapsed_time; 
+unsigned long current_time; 
+unsigned long previous_time; 
+unsigned long elapsed_time; 
 
-const int bpm_max_size = 10; 
+const int bpm_max_size = 5; 
 long elapsed_array[bpm_max_size]; 
 int bpm_index = 0; 
 bool bpm_array_full = false; 
@@ -29,6 +33,10 @@ long Red_array[spo2_max_size];
 int spo2_index = 0; 
 bool spo2_array_full = false; 
 
+// initialize timer variables 
+unsigned long past_time = 0; 
+float latest_BPM = -1;
+float latest_SPO2 = -1;
 
 //create and define any custom functions
 float calculateBPM(long ir_values){
@@ -148,9 +156,63 @@ float calculateSPO2(long ir_value, long red_value){
 
 }
 
+float updateLatestBPM(float BPM){
+  
+  if(BPM >=1){
+    latest_BPM = BPM; 
+  }
+
+  return latest_BPM; 
+
+}
+
+float updateLatestSPO2(float SPO2){
+
+  if(SPO2 >= 1){
+    latest_SPO2 = SPO2; 
+  }
+
+  return latest_SPO2; 
+}
+
+void printTimer(float latest_BPM, float latest_SPO2){
+  unsigned long time = millis(); 
+
+  //print if one second has passed 
+  if(time - past_time >= 1000){
+    past_time = time; 
+    lcd.clear();
+
+    if(latest_BPM >= 0){
+      lcd.setCursor(0,0);
+      lcd.print("BPM: "); 
+      lcd.print(latest_BPM); 
+    }
+    else{
+      lcd.setCursor(0,0);
+      lcd.print("BPM: ");
+      lcd.print("---");
+    }
+
+    if(latest_SPO2 >= 0){
+      lcd.setCursor(0,1);
+      lcd.print("SPO2: "); 
+      lcd.print(latest_SPO2);
+    }
+    else{
+      lcd.setCursor(0,1);
+      lcd.print("SPO2: ");
+      lcd.print("---");
+    }
+    
+  } 
+
+}
+
 void setup() {
+  lcd.begin(16,2); //setup lcd screen 
   Serial.begin(9600); //begin serial clock 
- 
+
   if (sensor.begin(Wire)){ //establish connection with the sensor
     sensor_found = true;
   }
@@ -165,18 +227,19 @@ void loop() {
     return;
   }
 
+  sensor.check();
+
   long ir_values = sensor.getIR(); //retrieve IR values
   long red_values = sensor.getRed(); //retrieve Red values 
 
   float BPM = calculateBPM(ir_values); //call function to calculate BPM 
   float SPO2 = calculateSPO2(ir_values, red_values); //call function to calculate spo2
 
-  //print spo2 and bpm values only if valid; 
-  if (BPM >= 0 && SPO2 >= 0){
-    Serial.print("BPM: "); 
-    Serial.println(BPM); 
-    Serial.print("SPO2: ");
-    Serial.println(SPO2); 
-  }
+  //update latest values 
+  latest_BPM = updateLatestBPM(BPM);
+  latest_SPO2 = updateLatestSPO2(SPO2);
+
+  //print spo2 and bpm values only if valid
+  printTimer(latest_BPM, latest_SPO2); 
 
 }
