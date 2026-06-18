@@ -18,11 +18,9 @@ bool first_beat = true;
 unsigned long current_time; 
 unsigned long previous_time; 
 unsigned long elapsed_time; 
+unsigned long avg_time; 
 
-const int bpm_max_size = 5; 
-long elapsed_array[bpm_max_size]; 
-int bpm_index = 0; 
-bool bpm_array_full = false; 
+bool first_interval = true; 
 
 //initialize variables for spo2
 const int spo2_max_size = 50; 
@@ -42,7 +40,7 @@ float latest_SPO2 = -1;
 float calculateBPM(long ir_values){
 
   if (checkForBeat(ir_values)){ 
-    //Serial.println("Beat Detected");
+    Serial.println("Beat Detected");
 
     //calculate elapsed time 
     if (first_beat){
@@ -60,30 +58,18 @@ float calculateBPM(long ir_values){
       return -1;
     }
 
-    //store elapsed time in array
-    elapsed_array[bpm_index] = elapsed_time; 
-    bpm_index++; 
-
-    if(bpm_index >= bpm_max_size){
-      bpm_index = 0; 
-      bpm_array_full = true; 
+    //calculate average time of intervals
+    if (first_interval){
+      avg_time = elapsed_time; 
+      first_interval = false; 
+    }
+    else{
+      avg_time = 0.8*avg_time + 0.2*elapsed_time; 
     }
 
-    //calculate the average of the array
-    if(bpm_array_full){
-      
-      float elapsed_sum = 0; 
-
-      for(int i=0; i < bpm_max_size; i++){
-        elapsed_sum = elapsed_sum + elapsed_array[i]; 
-      }
-
-      float avg_time = elapsed_sum / bpm_max_size; 
-      float bpm = 60000.0 / avg_time;
-      return bpm; 
-    }
-
-    return -1; 
+    //calculate and return bpm 
+    float bpm = 60000.0 / avg_time;
+    return bpm; 
 
   }
 
@@ -187,22 +173,26 @@ void printTimer(float latest_BPM, float latest_SPO2){
       lcd.setCursor(0,0);
       lcd.print("BPM: "); 
       lcd.print(latest_BPM); 
+      lcd.print("  ");
     }
     else{
       lcd.setCursor(0,0);
       lcd.print("BPM: ");
       lcd.print("---");
+      lcd.print("  ");
     }
 
     if(latest_SPO2 >= 0){
       lcd.setCursor(0,1);
       lcd.print("SPO2: "); 
       lcd.print(latest_SPO2);
+      lcd.print("  "); 
     }
     else{
       lcd.setCursor(0,1);
       lcd.print("SPO2: ");
       lcd.print("---");
+      lcd.print("  ");
     }
     
   } 
@@ -210,7 +200,7 @@ void printTimer(float latest_BPM, float latest_SPO2){
 }
 
 void setup() {
-  lcd.begin(16,2); //setup lcd screen 
+  lcd.begin(16,2);
   Serial.begin(9600); //begin serial clock 
 
   if (sensor.begin(Wire)){ //establish connection with the sensor

@@ -59,3 +59,12 @@
 ### Challenges
 - balanced real-time data processing with display updates to prevent flickering and maintain readable output
 - resolved incorrect LCD row formatting issues due to wiring configuration and cursor positioning errors
+
+## Day 6 - Updated BPM Calculator
+### What I DID
+- removed the moving average previously used for bpm calculations
+- implemented a running average that was continuously updating and did not require a 5-beat warm up
+- this new code allows the bpm to be detected slightly faster
+
+### Challenges
+- no significant challenges as the new code was much simpler than the older one 
