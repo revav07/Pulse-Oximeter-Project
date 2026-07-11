@@ -38,3 +38,10 @@ A wearable pulse oximeter prototype designed to measure heart rate (BPM) and est
 - Jumper Wires + Headers/Pins
 - Button 
 - 10k Ohm Resistor 
+
+### Schematic
+![Schematic](Docs/Pulse_Oximeter_ESP32_Schematics.png)
+
+### Installation
+- Install the SparkFun MAX30105 library to interface with the pulse oximeter sensor
+- Install the Espressif Systems ESP32 Board Package on Arduino IDE 
