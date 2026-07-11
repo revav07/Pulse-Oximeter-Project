@@ -30,6 +30,11 @@ unsigned long past_time = 0;
 float latest_BPM = -1;
 float latest_SPO2 = -1;
 
+//initialize button variables + pin
+byte lastButtonState;
+bool measuring = false; 
+#define BUTTON_PIN 32 
+
 //create and define any custom functions
 float calculateBPM(long ir_values){
 
@@ -192,6 +197,9 @@ void setup() {
     sensor.setPulseAmplitudeRed(0x0A);
     sensor.setPulseAmplitudeGreen(0);
   }
+
+  pinMode(BUTTON_PIN, INPUT_PULLUP); 
+  lastButtonState = digitalRead(BUTTON_PIN); 
 }
 
 void loop() {
@@ -199,19 +207,42 @@ void loop() {
     return;
   }
 
-  sensor.check();
+  byte buttonState = digitalRead(BUTTON_PIN); 
 
-  long ir_values = sensor.getIR(); //retrieve IR values
-  long red_values = sensor.getRed(); //retrieve Red values 
+  //if button is pressed
+  if(buttonState != lastButtonState){
+    lastButtonState = buttonState; 
+    
+    if(buttonState == LOW){
+      measuring = !measuring; //toggle monitoring on and off 
 
-  float BPM = calculateBPM(ir_values); //call function to calculate BPM 
-  float SPO2 = calculateSPO2(ir_values, red_values); //call function to calculate spo2
+      if(measuring){
+        Serial.println("Monitoring ON");
+      }      
+      else{
+        Serial.println("Monitoring OFF"); 
+      }
+      
+    }
+  }
 
-  //update latest values 
-  latest_BPM = updateLatestBPM(BPM);
-  latest_SPO2 = updateLatestSPO2(SPO2);
+  //if monitoring is on
+  if(measuring){
+    sensor.check();
 
-  //print spo2 and bpm values only if valid
-  printTimer(latest_BPM, latest_SPO2, ir_values); 
+    long ir_values = sensor.getIR(); //retrieve IR values
+    long red_values = sensor.getRed(); //retrieve Red values 
+
+    float BPM = calculateBPM(ir_values); //call function to calculate BPM 
+    float SPO2 = calculateSPO2(ir_values, red_values); //call function to calculate spo2
+
+    //update latest values 
+    latest_BPM = updateLatestBPM(BPM);
+    latest_SPO2 = updateLatestSPO2(SPO2);
+
+    //print spo2 and bpm values only if valid
+    printTimer(latest_BPM, latest_SPO2, ir_values); 
+  }
 
 }
+

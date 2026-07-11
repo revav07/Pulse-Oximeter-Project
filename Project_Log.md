@@ -116,3 +116,17 @@
     - Adjusting sensor initialization parameters.
     - Changing the BPM filtering approach from rejecting invalid results after calculation to accepting only valid heartbeat intervals.
     - Simplifying the BPM calculation flow to improve responsiveness.
+
+
+## Day 10 - Adding Button Toggling
+### What I Did
+- Added a physical button to toggle the pulse oximeter monitoring system on and off.
+- Modified the code to incorporate the button functionality, allowing the user to manually start and stop measurements.
+- This prevents the ESP32 from immediately collecting sensor data when it is powered on.
+
+### Challenges
+- Initially, the button was connected to what I believed was a second GND pin on the ESP32, but pressing the button did not change the system state.
+- Created a separate test sketch to isolate the button functionality and found that the button input was always being read as HIGH.
+- Checked the wiring and tested the button using an external pull-up resistor instead of the ESP32's internal pull-up resistor, but the issue remained.
+- After further debugging, I discovered that the pin I was using was not actually connected to GND.
+- Created a shared GND rail on the breadboard and connected all components to the same ground reference, which resolved the issue.
