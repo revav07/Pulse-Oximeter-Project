@@ -130,3 +130,14 @@
 - Checked the wiring and tested the button using an external pull-up resistor instead of the ESP32's internal pull-up resistor, but the issue remained.
 - After further debugging, I discovered that the pin I was using was not actually connected to GND.
 - Created a shared GND rail on the breadboard and connected all components to the same ground reference, which resolved the issue.
+
+## Day 11 - Establishing Bluetooth Connection
+### What I Did
+- Modified the code to support iOS Bluetooth connectivity
+- Implemented BLE communication using the ESP32 and created a BLE characteristic to transmit sensor data.
+- Tested the wireless connection using the nRF Connect app on iPhone and successfully received data from the ESP32.
+
+### Challenges
+- In my original implementation used BluetoothSerial, which relies on Bluetooth Classic and is not supported for custom device communication on iOS.
+- Since I am developing with an iPhone, I had to replace the Bluetooth communication system with BLE and learn a new communication protocol.
+- BLE was more complex because it uses a server, services, and characteristics rather than a simple serial communication stream.

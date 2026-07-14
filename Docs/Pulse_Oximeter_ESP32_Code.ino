@@ -2,15 +2,19 @@
 #include <Wire.h>
 #include "MAX30105.h"
 #include "heartRate.h"
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
 
+//create an BLE characteristic
+BLECharacteristic *pCharacteristic;
 
 //initialize sensor
 MAX30105 sensor;
 bool sensor_found = false;
 
 //initialize variables for bpm system 
-bool first_beat = true; 
-
 unsigned long current_time; 
 unsigned long previous_time = 0; 
 unsigned long elapsed_time; 
@@ -154,37 +158,80 @@ float updateLatestSPO2(float SPO2){
 void printTimer(float latest_BPM, float latest_SPO2, float ir_values){
   unsigned long time = millis(); 
 
-  //print if one second has passed 
+  // print if one second has passed
   if(time - past_time >= 1000){
     past_time = time;
 
+    String bpmString;
+    String spo2String;
+
+    // format BPM
+    if(latest_BPM >= 0){
+      bpmString = String(latest_BPM);
+    }
+    else{
+      bpmString = "---";
+    }
+
+    // format SpO2
+    if(latest_SPO2 >= 0){
+      spo2String = String(latest_SPO2);
+    }
+    else{
+      spo2String = "---";
+    }
+
+    // Print to Serial Monitor
     Serial.print("IR: ");
     Serial.println(ir_values);
 
     Serial.print("BPM: ");
-    if(latest_BPM >= 0){
-      Serial.println(latest_BPM);
-    }
-    else{
-      Serial.println("---");
-    }
+    Serial.println(bpmString);
 
     Serial.print("SpO2: ");
-    if(latest_SPO2 >= 0){
-      Serial.println(latest_SPO2);
-    }
-    else{
-      Serial.println("---");
-    }
-  }
+    Serial.println(spo2String);
 
+
+    // Send over BLE
+    String data = "IR: " + String(ir_values) +
+                  "\nBPM: " + bpmString +
+                  "\nSpO2: " + spo2String;
+
+    pCharacteristic->setValue(data.c_str());
+    pCharacteristic->notify();
+  }
 }
 
 void setup() {
   Wire.begin(21,22); 
   Serial.begin(115200); //begin serial clock 
 
-   if (sensor.begin(Wire)){
+  //set up bluetooth (BLE)
+  BLEDevice::init("ESP32 Pulse Oximeter");
+
+  BLEServer *server = BLEDevice::createServer();
+
+  BLEService *service = server->createService(
+    "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+  );
+
+  pCharacteristic = service->createCharacteristic(
+    "beb5483e-36e1-4688-b7f5-ea07361b26a8",
+    BLECharacteristic::PROPERTY_READ |
+    BLECharacteristic::PROPERTY_NOTIFY
+  );
+
+  pCharacteristic->addDescriptor(new BLE2902());
+
+  service->start();
+
+  server->getAdvertising()->start();
+
+  Serial.println("BLE Started");
+
+
+  //make sure the sensor is working and found 
+  if (sensor.begin(Wire)){
     sensor_found = true;
     Serial.println("MAX30102 found!");
   }
@@ -198,9 +245,11 @@ void setup() {
     sensor.setPulseAmplitudeGreen(0);
   }
 
+  //set up button 
   pinMode(BUTTON_PIN, INPUT_PULLUP); 
   lastButtonState = digitalRead(BUTTON_PIN); 
 }
+
 
 void loop() {
   if (!sensor_found){ //exit function if sensor connection is not successful
@@ -218,9 +267,15 @@ void loop() {
 
       if(measuring){
         Serial.println("Monitoring ON");
+
+        pCharacteristic->setValue("Monitoring ON");
+        pCharacteristic->notify();
       }      
       else{
-        Serial.println("Monitoring OFF"); 
+        Serial.println("Monitoring OFF");
+
+        pCharacteristic->setValue("Monitoring OFF");
+        pCharacteristic->notify();
       }
       
     }
@@ -245,4 +300,3 @@ void loop() {
   }
 
 }
-
