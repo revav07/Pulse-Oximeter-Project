@@ -37,7 +37,7 @@ float latest_SPO2 = -1;
 //initialize button variables + pin
 byte lastButtonState;
 bool measuring = false; 
-#define BUTTON_PIN 32 
+#define BUTTON_PIN 4 
 
 //create and define any custom functions
 float calculateBPM(long ir_values){

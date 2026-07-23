@@ -76,7 +76,6 @@
 - Evaluating whether the simplified exponential averaging approach could reduce latency without significantly reducing BPM accuracy.
 
 
-
 ## Day 7 - Planning Wearable Prototype
 ### What I Did
 - Researched and compared the Arduino Nano and ESP32 microcontrollers based on size, cost, processing speed, pin availability, connectivity features, and ease of use.
@@ -131,6 +130,7 @@
 - After further debugging, I discovered that the pin I was using was not actually connected to GND.
 - Created a shared GND rail on the breadboard and connected all components to the same ground reference, which resolved the issue.
 
+
 ## Day 11 - Establishing Bluetooth Connection
 ### What I Did
 - Modified the code to support iOS Bluetooth connectivity
@@ -141,3 +141,45 @@
 - In my original implementation used BluetoothSerial, which relies on Bluetooth Classic and is not supported for custom device communication on iOS.
 - Since I am developing with an iPhone, I had to replace the Bluetooth communication system with BLE and learn a new communication protocol.
 - BLE was more complex because it uses a server, services, and characteristics rather than a simple serial communication stream.
+
+
+## Day 12 - Soldering ESP32 + Button
+### What I Did
+- Soldered the ESP32 header pins onto a 5 × 7 cm perfboard to prepare it for permanent assembly.
+- Soldered a push button onto the perfboard and connected it to the ESP32 GPIO input.
+- Tested the button functionality using a simple test sketch to verify proper communication between the button and ESP32.
+
+### Challenges
+- Improved my soldering technique by practicing with stranded wires, wire stripping, and creating clean, reliable solder joints.
+- The button placement resulted in a short connection distance between pads, requiring a solder bridge to establish the connection.
+- Accidentally connected the button to the wrong GPIO pin and used solder wick to remove the connection before rewiring it correctly.
+
+
+## Day 13 - 3D Printing ESP32 Compartment
+### What I Did
+- Carefully measured the dimensions of the perfboard and component layout to create an accurate CAD model.
+- Used **Onshape** to design a custom enclosure for the ESP32 module that could be mounted on the wrist.
+- Added raised alignment pegs that fit into the perfboard mounting holes to secure the board and prevent shifting during use.
+- Designed a lower wire-routing compartment to allow connections to exit cleanly while protecting the electronics.
+- Incorporated clearances and tolerances into the design to ensure the enclosure could be assembled without damaging components.
+
+### Challenges
+- Taking precise measurements of small hardware components and translating them into an accurate CAD model.
+- Designing around existing electronics while ensuring that pressure points or tight fits would not damage the components.
+- Getting re-acclimated to CAD workflows and constraints after several years without using Onshape.
+
+
+## Day 14 - 3D Printing MAX30102 Holder
+### What I Did
+- Used **Onshape** to design a custom enclosure for the MAX30102 module that can be secured to the pointer finger.
+- Designed a hole along the back wall of the enclosure to allow wire connections to exit while protecting the sensor.
+- Added side slots for an elastic strap to thread through and secure the module comfortably.
+- Created a lid with a cutout to allow light from the sensor LEDs to reach the finger.
+- After printing the enclosure, soldered the wires connecting the ESP32 to the MAX30102 sensor pads.
+- Ran the code once and ensured all the hardware was connected properly 
+
+### Challenges
+- Soldering was challenging because the stranded wires were flexible and difficult to hold in place while attaching them to the small MAX30102 pads.
+- The first lid design had excessive tolerance, causing it to fit too loosely and slide off the enclosure.
+- Redesigned the lid with reduced clearance and a smaller cutout, improving the fit but still not achieving a tight friction fit.
+- Plan to use adhesive to permanently secure the lid while keeping the sensor accessible.
