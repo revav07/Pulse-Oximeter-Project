@@ -1,66 +1,79 @@
-# Pulse Oximeter Project Log 
+# Pulse Oximeter Project Log
 
-## Day 0 - Preparation and Soldering 
-### What I Did 
-- Learned soldering basics 
-- Successfully soldered header pins into MAX30102 module 
-
-### Challenges
-- Keeping header pins aligned while soldering
-
-
-## Day 1 - Research and Wiring 
-### What I Did 
-- Researched I2C communication (SDA and SCL wiring)
-- Conducted background research on how MAX30102 module works 
-- Created schematics diagram 
-
-### Challenges
-- Understanding different communication types used by PCBs 
-- Utilizing a new platform (easyEDA) to create schematics 
-
-
-## Day 2 - Calculating BPM 
+## Day 0 — Preparation & Soldering
 ### What I Did
-- wired the MAX30102 to the arduino 
-- conducted an I2C scan to ensure the MAX30102 was detected 
-- retrieved IR data 
-- calculated BPM based on IR data 
+- Learned the basics of through-hole soldering and practiced proper soldering technique.
+- Soldered header pins onto the MAX30102 pulse oximeter sensor module.
+- Prepared the sensor for connection to the Arduino and future prototyping.
 
 ### Challenges
-- understanding how to download libraries
-- creating functions in Arduino IDE
+- Keeping the header pins properly aligned and perpendicular while soldering.
+- Applying enough solder to create secure connections without creating solder bridges.
 
 
-## Day 3 - Calculating SPO2 
+## Day 1 — Research, I²C & Wiring
 ### What I Did
-- researched how SpO₂ is calculated in pulse oximeters.
-- developed a custom function to implement SpO₂ estimation using IR and red light sensor data.
+- Researched how I²C communication works, including the roles of **SDA** and **SCL**.
+- Studied the MAX30102's operating principles and how it uses red and infrared light to measure pulse-related signals.
+- Wired the MAX30102 to the Arduino based on the sensor's I²C interface.
+- Created an initial circuit schematic using EasyEDA.
 
 ### Challenges
-- understanding the underlying SpO₂ calculation method and signal processing involved.
-- translating the mathematical process into code that updates in real time using continuously incoming sensor data.
+- Understanding how different communication protocols are used to connect electronic components.
+- Learning how I²C devices communicate with a microcontroller.
+- Getting familiar with EasyEDA and translating the physical circuit into a schematic.
 
 
-## Day 4 - Smoothing out BPM Calculations
+## Day 2 — Heart Rate (BPM) Calculation
 ### What I Did
-- BPM was previously calculated using a single heartbeat interval, which caused fluctuations.
-- implemented a moving average of multiple heartbeat intervals to make readings more reliable.
-- reused the rolling average approach previously used in SpO₂ processing.
+- Connected the MAX30102 to the Arduino and established communication with the sensor.
+- Performed an I²C scan to verify that the MAX30102 was properly detected.
+- Retrieved infrared (IR) sensor data from the MAX30102.
+- Developed code to identify heartbeats from the IR signal and calculate beats per minute (BPM).
 
 ### Challenges
-- adapting the averaging system from SpO₂ (signal data) to BPM (time interval data).
-- ensuring the system remains responsive while still reducing noise in the readings.
+- Learning how to install and use external libraries in the Arduino IDE.
+- Understanding how sensor data is retrieved and processed in code.
+- Learning how to organize the Arduino code into reusable functions.
 
 
-## Day 5 - Printout Timer and LCD Display 
+## Day 3 — SpO₂ Calculation
 ### What I Did
-- implemented a timed update system to display the most recent BPM and SpO₂ readings at 1-second intervals
-- assembled and wired an LCD display for real-time data output
+- Researched how pulse oximeters estimate blood oxygen saturation (SpO₂) using red and infrared light.
+- Studied how the relationship between the red and IR signals can be used to estimate SpO₂.
+- Developed a custom function to process red and IR sensor data and estimate SpO₂ in real time.
+- Integrated the SpO₂ calculation with the existing BPM measurement system.
 
 ### Challenges
-- balanced real-time data processing with display updates to prevent flickering and maintain readable output
-- resolved incorrect LCD row formatting issues due to wiring configuration and cursor positioning errors
+- Understanding the underlying mathematics and signal-processing concepts behind SpO₂ estimation.
+- Translating the mathematical calculation into working Arduino code.
+- Processing continuously incoming sensor data while keeping the readings responsive.
+
+
+## Day 4 — Smoothing BPM Calculations
+### What I Did
+- Identified significant fluctuations in BPM readings caused by calculating heart rate from individual heartbeat intervals.
+- Implemented a rolling average of multiple heartbeat intervals to produce more stable BPM readings.
+- Adapted the averaging approach previously used during SpO₂ processing for the BPM calculation.
+- Tested the updated algorithm to compare the stability of the readings before and after smoothing.
+
+### Challenges
+- Adapting an averaging method designed for signal data to work with heartbeat time intervals.
+- Determining how many measurements to include in the average without making the system too slow to respond.
+- Reducing fluctuations while preserving the system's ability to respond to changes in heart rate.
+
+
+## Day 5 — Timed Output & LCD Display
+### What I Did
+- Implemented a timed update system so the most recent BPM and SpO₂ readings are displayed at 1-second intervals.
+- Connected and wired an LCD display to the Arduino.
+- Programmed the LCD to display real-time BPM and SpO₂ measurements.
+- Debugged the display layout and adjusted cursor positioning to properly format the readings.
+
+### Challenges
+- Balancing continuous sensor processing with periodic LCD updates.
+- Preventing unnecessary screen refreshing and flickering while maintaining up-to-date readings.
+- Troubleshooting incorrect LCD row formatting caused by wiring configuration and cursor positioning.
 
 
 ## Day 6 - Updating BPM Calculator
@@ -183,3 +196,16 @@
 - The first lid design had excessive tolerance, causing it to fit too loosely and slide off the enclosure.
 - Redesigned the lid with reduced clearance and a smaller cutout, improving the fit but still not achieving a tight friction fit.
 - Plan to use adhesive to permanently secure the lid while keeping the sensor accessible.
+
+
+## Day 15 - Attaching Lid and Straps
+### What I Did
+- Sewed and secured elastic straps to create the wearable attachment system
+- Integrated the MAX30102 sensor into a custom 3D-printed holder
+- Glued the lid onto the MAX30102 holder to securely enclose the electronics
+- Focused on making the prototype compact, secure, and comfortable to wear
+
+### Challenges
+- The thicker elastic was difficult to sew through and required extra care to keep the stitching secure and aligned.
+- Gluing the lid onto the MAX30102 holder was challenging because I needed to apply enough adhesive for a strong bond without getting glue on the exposed electronics.
+- Had to carefully position the straps and lid to ensure the final assembly stayed aligned and functional.
